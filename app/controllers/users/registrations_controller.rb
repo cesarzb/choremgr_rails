@@ -4,6 +4,12 @@ module Users
   class RegistrationsController < Devise::RegistrationsController # rubocop:todo Style/Documentation
     respond_to :json
 
+    protected
+
+    def configure_sign_up_params
+      devise_parameter_sanitizer.permit(:sign_up, keys: [:role])
+    end
+
     private
 
     def respond_with(resource, _opts = {})
