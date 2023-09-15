@@ -20,6 +20,8 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'pry', '~> 0.14.2'
+  gem 'pry-nav'
+  gem 'pry-remote'
   gem 'rspec-rails', '~> 6.0.0'
   gem 'rswag'
 end

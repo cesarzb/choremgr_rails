@@ -1,0 +1,18 @@
+AllCops:
+  NewCops: disable
+  Exclude:
+    - "db/schema.rb"
+    - "db/*"
+    - "db/*.rb"
+    - "db/*/*.rb"
+    - "config/*/*.rb"
+    - "config/*.rb"
+    - "bin/*"
+    - "Rakefile"
+Metrics/BlockLength:
+  Exclude:
+    - "spec/*/*.rb"
+Layout/LineLength:
+  Max: 80
+  Exclude:
+    - "spec/*.rb"

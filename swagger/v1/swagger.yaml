@@ -1,0 +1,93 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/users":
+    post:
+      summary: Create a user
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '200':
+          description: creates a user
+          headers:
+            Authorization:
+              schema:
+                type: string
+                nullable: false
+              description: |-
+                JWT token that is required to
+                                                proceed to other pages authorized,
+                                          it looks like this: "Authorization: Bearer
+                                          generated.jwt.token"
+          content:
+            application/json:
+              examples:
+                user:
+                  value:
+                    message: Registered.
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      default: email@example.com
+                    password:
+                      type: string
+                      default: Password1@
+                    password_confirmation:
+                      type: string
+                      default: Password1@
+                    role:
+                      type: integer
+                      default: 0
+                  required:
+                  - email
+                  - password
+                  - password_confirmation
+                  - role
+  "/users/sign_in":
+    post:
+      summary: Log in a user
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '200':
+          description: user logged in
+        '401':
+          description: user unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+                required:
+                - email
+                - password
+                - password_confirmation
+                - role
+servers:
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: www.example.com

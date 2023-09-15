@@ -2,6 +2,7 @@
 
 module Users
   class RegistrationsController < Devise::RegistrationsController # rubocop:todo Style/Documentation
+    before_action :configure_sign_up_params
     respond_to :json
 
     protected
@@ -23,7 +24,8 @@ module Users
     end
 
     def register_failed
-      render json: { message: "Couldn't register." }
+      render json: { message: "Couldn't register." },
+             status: :unprocessable_entity
     end
   end
 end

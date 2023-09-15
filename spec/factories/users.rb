@@ -8,6 +8,7 @@ FactoryBot.define do
   factory :user do
     email
     password { 'Password1@' }
+    password_confirmation { 'Password1@' }
     role { 0 }
   end
 end
