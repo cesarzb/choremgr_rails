@@ -24,7 +24,7 @@ describe 'Users' do
         }
       }
 
-      response '200', 'creates a user' do
+      response '200', 'correct request' do
         let(:signup_data) { { user: attributes_for(:user) } }
         schema type: :object,
                properties: {
@@ -35,16 +35,51 @@ describe 'Users' do
                                 proceed to other pages authorized,
                           it looks like this: "Authorization: Bearer
                           generated.jwt.token"'
-
         example 'application/json', :user, {
           "message": 'Registered.'
         }
-        run_test!
+
+        it 'creates new user for valid parameters' do
+          expect do
+            post user_registration_path,
+                 params: { user: attributes_for(:user) }
+          end.to change { User.count }.from(0).to(1)
+        end
+
+        it 'has a successful response' do
+          post user_registration_path,
+               params: { user: attributes_for(:user) }
+          expect(response.status).to eq(200)
+        end
       end
 
       response '422', 'invalid request' do
         let(:signup_data) { { user: attributes_for(:user, password: ' ') } }
-        run_test!
+        schema type: :object,
+               properties: {
+                 message: { type: :string },
+                 errors: { type: :array,
+                           properties: {
+                             type: :string
+                           } }
+               }
+
+        example 'application/json', :user, {
+          "message": 'Registered.'
+        }
+
+        it "doesn't create new user for invalid parameters" do
+          expect do
+            post user_registration_path,
+                 params: { user: attributes_for(:user, password: ' ') }
+          end.not_to(change { User.count })
+        end
+
+        it "doesn't have a successful response" do
+          post user_registration_path,
+               params: { user: attributes_for(:user, password: ' ') }
+          expect(response.status).to eq(422)
+        end
       end
     end
   end
@@ -75,6 +110,15 @@ describe 'Users' do
           { user: { email: exe_user.email,
                     password: exe_user.password } }
         end
+        schema type: :object,
+               properties: {
+                 message: { type: :string }
+               }
+        header 'Authorization', schema: { type: :string, nullable: false },
+                                description: 'JWT token that is required to
+                                proceed to other pages authorized,
+                          it looks like this: "Authorization: Bearer
+                          generated.jwt.token"'
         run_test!
       end
 

@@ -16,15 +16,16 @@ module Users
     def respond_with(resource, _opts = {})
       register_success && return if resource.persisted?
 
-      register_failed
+      register_failed(resource)
     end
 
     def register_success
       render json: { message: 'Registered.' }
     end
 
-    def register_failed
-      render json: { message: "Couldn't register." },
+    def register_failed(resource)
+      render json: { message: "Couldn't register.",
+                     errors: resource.errors.full_messages },
              status: :unprocessable_entity
     end
   end

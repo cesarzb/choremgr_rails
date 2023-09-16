@@ -9,6 +9,6 @@ FactoryBot.define do
     email
     password { 'Password1@' }
     password_confirmation { 'Password1@' }
-    role { 0 }
+    role { 'executor' }
   end
 end

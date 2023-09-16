@@ -6,6 +6,7 @@ User.destroy_all
   User.create(
     email: Faker::Internet.email,
     password: 'Password1@',
+    password_confirmation: 'Password1@',
     role: 0
   )
   system('clear') || system('cls')
@@ -16,6 +17,7 @@ end
   User.create(
     email: Faker::Internet.email,
     password: 'Password1@',
+    password_confirmation: 'Password1@',
     role: 1
   )
   system('clear') || system('cls')

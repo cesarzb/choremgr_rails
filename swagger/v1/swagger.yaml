@@ -31,6 +31,12 @@ paths:
                     message: Registered.
         '422':
           description: invalid request
+          content:
+            application/json:
+              examples:
+                user:
+                  value:
+                    message: Registered.
       requestBody:
         content:
           application/json:
@@ -66,6 +72,16 @@ paths:
       responses:
         '200':
           description: user logged in
+          headers:
+            Authorization:
+              schema:
+                type: string
+                nullable: false
+              description: |-
+                JWT token that is required to
+                                                proceed to other pages authorized,
+                                          it looks like this: "Authorization: Bearer
+                                          generated.jwt.token"
         '401':
           description: user unauthorized
       requestBody:
