@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord # rubocop:todo Style/Documentation
+  has_and_belongs_to_many :managed_teams, class_name: 'Team',
+                                          join_table: :user_team_managed
+  has_and_belongs_to_many :executed_teams, class_name: 'Team',
+                                           join_table: :user_team_executed
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
