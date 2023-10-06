@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :team do
-    name { 'MyString' }
-    description { 'MyText' }
+    name { Faker::FunnyName.name }
+    description { Faker::JapaneseMedia::StudioGhibli.quote }
   end
 end

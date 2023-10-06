@@ -9,6 +9,16 @@ class Team < ApplicationRecord # rubocop:todo Style/Documentation
                                       join_table: :user_team_executed,
                                       validate: false
 
-  validates :name, presence: true, length: { minimum: 1, maximum: 24 }
+  validates :name, presence: true, length: { minimum: 2, maximum: 24 }
   validates :description, length: { minimum: 3 }
+  validate :manager_present
+
+  private
+
+  def manager_present
+    return unless managers.empty?
+
+    errors.add :managers,
+               'has to contain at least one manager.'
+  end
 end
