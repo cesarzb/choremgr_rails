@@ -28,7 +28,8 @@ module Api
 
       def show
         if current_user.teams.include?(@team)
-          render json: @team
+          team_presenter = ::TeamPresenter.new(@team)
+          render json: team_presenter.call
         else
           render status: :unauthorized
         end
@@ -38,6 +39,7 @@ module Api
         ActiveRecord::Base.transaction do
           @team.executor_ids = params.dig(:team, :executor_ids)
           @team.manager_ids = params.dig(:team, :manager_ids)
+
           if @team.update(team_params)
             render json: @team
           else
@@ -48,11 +50,8 @@ module Api
       end
 
       def destroy
-        if @team.destroy
-          render head: :no_content
-        else
-          render head: :unprocessable_entity
-        end
+        @team.destroy
+        render status: :no_content
       end
 
       private

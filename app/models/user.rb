@@ -19,4 +19,8 @@ class User < ApplicationRecord # rubocop:todo Style/Documentation
   validates :password_confirmation, presence: true
 
   enum role: %i[executor manager]
+
+  def teams
+    (managed_teams.all + executed_teams.all).uniq
+  end
 end

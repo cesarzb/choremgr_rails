@@ -64,9 +64,12 @@ describe 'Users' do
                            } }
                }
 
-        example 'application/json', :user, {
-          "message": 'Registered.'
-        }
+        example 'application/json', :user,
+                {
+                  "email": [
+                    "can't be blank"
+                  ]
+                }
 
         it "doesn't create new user for invalid parameters" do
           expect do

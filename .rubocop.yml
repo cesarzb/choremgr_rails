@@ -9,6 +9,7 @@ AllCops:
     - "config/*.rb"
     - "bin/*"
     - "Rakefile"
+    - "spec/factories/*.rb"
 Metrics/BlockLength:
   Exclude:
     - "spec/*/*.rb"

@@ -4,6 +4,269 @@ info:
   title: API V1
   version: v1
 paths:
+  "/api/v1/teams":
+    post:
+      summary: Create a team
+      tags:
+      - Teams
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: correct request
+          content:
+            application/json:
+              examples:
+                team:
+                  value:
+                    id: 7
+                    name: myTeam
+                    description: This is a great team
+                    created_at: '2023-10-07T06:08:03.427Z'
+                    updated_at: '2023-10-07T06:08:03.427Z'
+              schema:
+                type: object
+                properties:
+                  team:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      created_at:
+                        type: datetime
+                      updated_at:
+                        type: datetime
+        '422':
+          description: invalid request
+          content:
+            application/json:
+              examples:
+                team:
+                  value:
+                    name:
+                    - can't be blank
+                    - is too short (minimum is 2 characters)
+                    description:
+                    - is too short (minimum is 3 characters)
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: array
+                    properties:
+                      type: string
+                  description:
+                    type: array
+                    properties:
+                      type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                team:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      default: Team name
+                    description:
+                      type: string
+                      default: Description
+                    manager_ids:
+                      type: array
+                      properties:
+                      - type: integer
+                    executor_ids:
+                      type: array
+                      properties:
+                      - type: integer
+                  required:
+                  - name
+                  - description
+    get:
+      summary: Return a list of teams
+      tags:
+      - Teams
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: correct request
+          content:
+            application/json:
+              examples:
+                teams:
+                  value:
+                  - id: 7
+                    name: myTeam
+                    description: This is a great team
+                    created_at: '2023-10-07T06:08:03.427Z'
+                    updated_at: '2023-10-07T06:08:03.427Z'
+              schema:
+                type: array
+                properties:
+                - type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    created_at:
+                      type: datetime
+                    updated_at:
+                      type: datetime
+  "/api/v1/teams/{id}":
+    get:
+      summary: Return a team
+      tags:
+      - Teams
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+          default: 12
+        required: true
+      responses:
+        '200':
+          description: correct request
+          content:
+            application/json:
+              examples:
+                team:
+                  value:
+                    id: 7
+                    name: myTeam
+                    description: This is a great team
+                    created_at: '2023-10-07T06:08:03.427Z'
+                    updated_at: '2023-10-07T06:08:03.427Z'
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  created_at:
+                    type: datetime
+                  updated_at:
+                    type: datetime
+        '401':
+          description: unauthorized request
+    patch:
+      summary: Create a team
+      tags:
+      - Teams
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+          default: 12
+        required: true
+      responses:
+        '200':
+          description: correct request
+          content:
+            application/json:
+              examples:
+                team:
+                  value:
+                    id: 7
+                    name: myTeam
+                    description: This is a great team
+                    created_at: '2023-10-07T06:08:03.427Z'
+                    updated_at: '2023-10-07T06:08:03.427Z'
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  created_at:
+                    type: datetime
+                  updated_at:
+                    type: datetime
+        '403':
+          description: forbidden request
+        '422':
+          description: incorrect request
+          content:
+            application/json:
+              examples:
+                team:
+                  value:
+                    name:
+                    - can't be blank
+                    - is too short (minimum is 2 characters)
+                    description:
+                    - is too short (minimum is 3 characters)
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    properties:
+                      type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                team:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      default: Team name
+                    description:
+                      type: string
+                      default: Description
+                    manager_ids:
+                      type: array
+                      properties:
+                      - type: integer
+                    executor_ids:
+                      type: array
+                      properties:
+                      - type: integer
+                  required:
+                  - managers_ids
+    delete:
+      summary: Create a team
+      tags:
+      - Teams
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+          default: 12
+        required: true
+      responses:
+        '204':
+          description: correct request
   "/users":
     post:
       summary: Create a user
@@ -12,7 +275,7 @@ paths:
       parameters: []
       responses:
         '200':
-          description: creates a user
+          description: correct request
           headers:
             Authorization:
               schema:
@@ -36,7 +299,8 @@ paths:
               examples:
                 user:
                   value:
-                    message: Registered.
+                    email:
+                    - can't be blank
       requestBody:
         content:
           application/json:
@@ -103,7 +367,12 @@ paths:
                 - password_confirmation
                 - role
 servers:
-- url: https://{defaultHost}
+- url: http://{defaultHost}
   variables:
     defaultHost:
-      default: www.example.com
+      default: localhost:3000
+components:
+  securitySchemes:
+    bearer_auth:
+      type: http
+      scheme: bearer
