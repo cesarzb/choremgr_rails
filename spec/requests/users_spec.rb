@@ -100,11 +100,11 @@ describe 'Users' do
           user: {
             type: :object,
             properties: {
-              email: { type: :string },
-              password: { type: :string }
-            }
-          },
-          required: %w[email password password_confirmation role]
+              email: { type: :string, default: 'email@example.com' },
+              password: { type: :string, default: 'Password1@' }
+            },
+            required: %w[email password]
+          }
         }
       }
 

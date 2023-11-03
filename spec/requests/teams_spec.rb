@@ -186,17 +186,40 @@ describe 'Teams' do
                  name: { type: :string },
                  description: { type: :string },
                  created_at: { type: :datetime },
-                 updated_at: { type: :datetime }
+                 updated_at: { type: :datetime },
+                 managers: { type: :array,
+                             properties: {
+                               id: { type: :integer },
+                               email: { type: :string }
+                             } },
+                 executors: { type: :array,
+                              properties: {
+                                id: { type: :integer },
+                                email: { type: :string }
+                              } }
                }
 
         example 'application/json', :team,
                 {
-                  "id": 7,
-                  "name": 'myTeam',
-                  "description": 'This is a great team',
-                  "created_at": '2023-10-07T06:08:03.427Z',
-                  "updated_at": '2023-10-07T06:08:03.427Z'
+                  "id": 12,
+                  "name": 'Team name',
+                  "description": 'Description',
+                  "created_at": '2023-10-26T07:21:30.578Z',
+                  "updated_at": '2023-10-26T07:21:30.578Z',
+                  "managers": [
+                    {
+                      "id": 32,
+                      "email": 'email@example.com'
+                    }
+                  ],
+                  "executors": [
+                    {
+                      "id": 32,
+                      "email": 'email@example.com'
+                    }
+                  ]
                 }
+
         let(:Authorization) do
           Devise::JWT::TestHelpers.auth_headers({},
                                                 manager)['Authorization']
@@ -207,7 +230,8 @@ describe 'Teams' do
           get api_v1_team_path(team.id),
               headers: auth_headers
 
-          expect(response.body).to eq(team.to_json)
+          team_presenter = ::TeamPresenter.new(team)
+          expect(response.body).to eq(team_presenter.call.to_json)
         end
 
         run_test!
@@ -231,7 +255,7 @@ describe 'Teams' do
     end
 
     # UPDATE
-    patch 'Create a team' do
+    patch 'Update a team' do
       tags 'Teams'
       security [bearer_auth: []]
       consumes 'application/json'
@@ -248,16 +272,16 @@ describe 'Teams' do
                 type: :array,
                 properties: [
                   type: :integer
-                ]
+                ], default: [1, 2, 3, 4]
               },
               executor_ids: {
                 type: :array,
                 properties: [
                   type: :integer
-                ]
+                ], default: [1, 2, 3, 4]
               }
             },
-            required: %w[managers_ids]
+            required: %w[name description managers_ids]
           }
         }
       }
@@ -377,7 +401,7 @@ describe 'Teams' do
       end
 
       # DESTROY
-      delete 'Create a team' do
+      delete 'Delete a team' do
         tags 'Teams'
         security [bearer_auth: []]
         parameter name: :id, in: :path, schema: { type: :integer, default: 12 }

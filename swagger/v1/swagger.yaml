@@ -146,11 +146,17 @@ paths:
               examples:
                 team:
                   value:
-                    id: 7
-                    name: myTeam
-                    description: This is a great team
-                    created_at: '2023-10-07T06:08:03.427Z'
-                    updated_at: '2023-10-07T06:08:03.427Z'
+                    id: 12
+                    name: Team name
+                    description: Description
+                    created_at: '2023-10-26T07:21:30.578Z'
+                    updated_at: '2023-10-26T07:21:30.578Z'
+                    managers:
+                    - id: 32
+                      email: email@example.com
+                    executors:
+                    - id: 32
+                      email: email@example.com
               schema:
                 type: object
                 properties:
@@ -164,10 +170,24 @@ paths:
                     type: datetime
                   updated_at:
                     type: datetime
+                  managers:
+                    type: array
+                    properties:
+                      id:
+                        type: integer
+                      email:
+                        type: string
+                  executors:
+                    type: array
+                    properties:
+                      id:
+                        type: integer
+                      email:
+                        type: string
         '401':
           description: unauthorized request
     patch:
-      summary: Create a team
+      summary: Update a team
       tags:
       - Teams
       security:
@@ -245,14 +265,26 @@ paths:
                       type: array
                       properties:
                       - type: integer
+                      default:
+                      - 1
+                      - 2
+                      - 3
+                      - 4
                     executor_ids:
                       type: array
                       properties:
                       - type: integer
+                      default:
+                      - 1
+                      - 2
+                      - 3
+                      - 4
                   required:
+                  - name
+                  - description
                   - managers_ids
     delete:
-      summary: Create a team
+      summary: Delete a team
       tags:
       - Teams
       security:
@@ -359,13 +391,13 @@ paths:
                   properties:
                     email:
                       type: string
+                      default: email@example.com
                     password:
                       type: string
-                required:
-                - email
-                - password
-                - password_confirmation
-                - role
+                      default: Password1@
+                  required:
+                  - email
+                  - password
 servers:
 - url: http://{defaultHost}
   variables:
