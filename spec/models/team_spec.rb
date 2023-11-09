@@ -3,11 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe Team, type: :model do
-  let!(:mgr_user) { create(:user, role: 1) }
+  let!(:manager) { create(:user, role: 1) }
   let(:team_attrs) { attributes_for(:team) }
   let(:team) do
     team = Team.new(team_attrs)
-    team.managers << mgr_user
+    team.managers << manager
     team
   end
 

@@ -1,4 +1,6 @@
-class TeamMembersPresenter
+# frozen_string_literal: true
+
+class TeamMemberPresenter # rubocop:todo Style/Documentation
   # Doesn't inherit from anything
   def initialize(member)
     @member = member

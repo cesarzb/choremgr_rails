@@ -1,4 +1,6 @@
-class TeamPresenter
+# frozen_string_literal: true
+
+class TeamPresenter # rubocop:todo Style/Documentation
   # Doesn't inherit from anything
   def initialize(team)
     @team = team
@@ -20,14 +22,14 @@ class TeamPresenter
 
   def managers
     @team.managers.map do |manager|
-      member_presenter = TeamMembersPresenter.new(manager)
+      member_presenter = TeamMemberPresenter.new(manager)
       member_presenter.call
     end
   end
 
   def executors
     @team.executors.map do |executor|
-      member_presenter = TeamMembersPresenter.new(executor)
+      member_presenter = TeamMemberPresenter.new(executor)
       member_presenter.call
     end
   end

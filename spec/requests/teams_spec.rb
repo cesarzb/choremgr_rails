@@ -69,7 +69,7 @@ describe 'Teams' do
           "updated_at": '2023-10-07T06:08:03.427Z'
         }
 
-        it 'creates new user for valid parameters' do
+        it 'creates new team for valid parameters' do
           expect do
             post api_v1_teams_path,
                  params: team_data,
@@ -111,7 +111,7 @@ describe 'Teams' do
 
         it "doesn't create a new team for invalid parameters" do
           expect do
-            post user_registration_path,
+            post api_v1_teams_path,
                  params: team_data,
                  headers: auth_headers
           end.not_to(change { Team.count })

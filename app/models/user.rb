@@ -5,6 +5,7 @@ class User < ApplicationRecord # rubocop:todo Style/Documentation
                                           join_table: :user_team_managed
   has_and_belongs_to_many :executed_teams, class_name: 'Team',
                                            join_table: :user_team_executed
+  has_many :chores, dependent: :destroy
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
