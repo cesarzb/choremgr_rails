@@ -41,8 +41,7 @@ module Api
 
       def update
         ActiveRecord::Base.transaction do
-          @chore.manager_id = params.dig(:chore, :manager_id)
-          @chore.executor_id = params.dig(:chore, :executor_id)
+          return unless assign_members
 
           if @chore.update(chore_params)
             chore_presenter = ::ChorePresenter.new(@chore)
@@ -112,13 +111,19 @@ module Api
                                     :team_id))
         unless team.executors.include?(User.find(params.dig(:chore,
                                                             :executor_id)))
-          render json:
-          { error: 'You are not authorized to perform this action' },
-                 status: :forbidden
+          render json: { error: "You are not authorized to perform this \
+action" }, status: :forbidden
         end
       rescue ActiveRecord::RecordNotFound
         render json: { error: 'You are not authorized to perform this action' },
                status: :forbidden
+      end
+
+      def assign_members
+        @chore.manager_id = params.dig(:chore, :manager_id)
+        @chore.executor_id = params.dig(:chore, :executor_id)
+
+        !@chore.manager_id.nil? && !@chore.executor_id.nil?
       end
     end
   end

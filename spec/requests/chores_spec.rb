@@ -575,7 +575,8 @@ describe 'Chores' do
                 headers: auth_headers
 
           expect(response.body).to eq(
-            "{\"name\":[\"can't be blank\",\"is too short (minimum is 2 characters)\"]}"
+            "{\"name\":[\"can't be blank\",\
+\"is too short (minimum is 2 characters)\"]}"
           )
         end
 

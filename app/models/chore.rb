@@ -7,8 +7,8 @@ class Chore < ApplicationRecord # rubocop:todo Style/Documentation
   scope :for_teams, lambda { |team_ids|
                       where(team_id: team_ids) if team_ids.present?
                     }
-  belongs_to :manager, class_name: 'User'
-  belongs_to :executor, class_name: 'User'
+  belongs_to :manager, class_name: 'User', foreign_key: :manager_id
+  belongs_to :executor, class_name: 'User', foreign_key: :executor_id
   belongs_to :team
 
   validates :name, presence: true, length: { minimum: 2, maximum: 24 }

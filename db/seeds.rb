@@ -47,3 +47,15 @@ teams = []
   system('clear') || system('cls')
   puts "Creating teams: #{i + 1}/5"
 end
+
+executors.each do |executor|
+  3.times do
+    Chore.create!(
+      name: Faker::FunnyName.name,
+      description: Faker::JapaneseMedia::StudioGhibli.quote,
+      executor_id: executor.id,
+      team_id: executor.teams.first.id,
+      manager_id: executor.teams.first.managers.first.id
+    )
+  end
+end
