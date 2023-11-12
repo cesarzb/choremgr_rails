@@ -25,13 +25,15 @@ describe 'Chores' do
                                           manager)
   end
 
-  path '/api/v1/chores' do
+  path '/api/v1/teams/{team_id}/chores' do
     # CREATE
     post 'Create a chore' do
       tags 'Chores'
       security [bearer_auth: []]
       consumes 'application/json'
       produces 'application/json'
+      parameter name: :team_id, in: :path,
+                schema: { type: :integer, default: 12 }
       parameter name: :chore_data, in: :body, schema: {
         type: :object,
         properties: {
@@ -40,19 +42,18 @@ describe 'Chores' do
             properties: {
               name: { type: :string, default: 'Chore name' },
               description: { type: :string, default: 'Description' },
-              team_id: { type: :integer, default: 12 },
               executor_id: { type: :integer, default: 3 }
             },
-            required: %w[name description executor_id team_id]
+            required: %w[name description executor_id]
           }
         }
       }
 
       response '201', 'correct request' do
+        let(:team_id) { team.id }
         let(:chore_data) do
           { chore: attributes_for(:chore,
-                                  executor_id: executor.id,
-                                  team_id: team.id) }
+                                  executor_id: executor.id) }
         end
         let(:Authorization) do
           Devise::JWT::TestHelpers.auth_headers({},
@@ -106,7 +107,7 @@ describe 'Chores' do
 
         it 'creates new chore for valid parameters' do
           expect do
-            post api_v1_chores_path,
+            post api_v1_team_chores_path(team.id),
                  params: chore_data,
                  headers: auth_headers
           end.to change { Chore.count }.from(1).to(2)
@@ -116,11 +117,11 @@ describe 'Chores' do
       end
 
       response '422', 'invalid request' do
+        let(:team_id) { team.id }
         let(:chore_data) do
           { chore: attributes_for(:chore,
                                   name: '',
-                                  executor_id: executor.id,
-                                  team_id: team.id) }
+                                  executor_id: executor.id) }
         end
         let(:Authorization) do
           Devise::JWT::TestHelpers.auth_headers({},
@@ -159,7 +160,7 @@ describe 'Chores' do
 
         it "doesn't create a new chore for invalid parameters" do
           expect do
-            post api_v1_chores_path,
+            post api_v1_team_chores_path(team.id),
                  params: chore_data,
                  headers: auth_headers
           end.not_to(change { Chore.count })
@@ -169,10 +170,10 @@ describe 'Chores' do
       end
 
       response '403', 'unauthorized request' do
+        let(:team_id) { other_team.id }
         let(:chore_data) do
           { chore: attributes_for(:chore,
-                                  executor_id: executor.id,
-                                  team_id: other_team.id) }
+                                  executor_id: executor.id) }
         end
         let(:Authorization) do
           Devise::JWT::TestHelpers.auth_headers({},
@@ -181,7 +182,7 @@ describe 'Chores' do
 
         it "doesn't create a new chore for a team not belonging to manager" do
           expect do
-            post api_v1_chores_path,
+            post api_v1_team_chores_path(other_team.id),
                  params: chore_data,
                  headers: auth_headers
           end.not_to(change { Chore.count })
@@ -189,12 +190,11 @@ describe 'Chores' do
 
         it "doesn't create a new chore for an executor from other team" do
           incorrect_chore_data = { chore: attributes_for(:chore,
-                                                         team_id: team.id,
                                                          executor_id:
                                                          other_executor.id) }
 
           expect do
-            post api_v1_chores_path,
+            post api_v1_team_chores_path(team.id),
                  params: incorrect_chore_data,
                  headers: auth_headers
           end.not_to(change { Chore.count })
@@ -203,7 +203,9 @@ describe 'Chores' do
         run_test!
       end
     end
+  end
 
+  path '/api/v1/chores' do
     # INDEX
     get 'Return a list of chores' do
       let!(:chore) do
@@ -284,7 +286,7 @@ describe 'Chores' do
     end
   end
 
-  path '/api/v1/chores/{id}' do
+  path '/api/v1/teams/{team_id}/chores/{id}' do
     let!(:chore) do
       create(:chore,
              executor_id: executor.id,
@@ -309,9 +311,12 @@ describe 'Chores' do
       tags 'Chores'
       security [bearer_auth: []]
       produces 'application/json'
+      parameter name: :team_id, in: :path,
+                schema: { type: :integer, default: 12 }
       parameter name: :id, in: :path, schema: { type: :integer, default: 12 }
 
       response '200', 'correct request' do
+        let(:team_id) { team.id }
         let(:id) { chore.id }
         schema type: :object,
                properties: {
@@ -365,7 +370,7 @@ describe 'Chores' do
         end
 
         it 'returns a chore for a correct user' do
-          get api_v1_chore_path(chore.id),
+          get api_v1_team_chore_path(team.id, chore.id),
               headers: auth_headers
 
           chore_presenter = ::ChorePresenter.new(chore)
@@ -380,10 +385,11 @@ describe 'Chores' do
           Devise::JWT::TestHelpers.auth_headers({},
                                                 manager)['Authorization']
         end
+        let(:team_id) { other_team.id }
         let(:id) { other_chore.id }
 
         it "doesn't return a chore for an incorrect user" do
-          get api_v1_chore_path(other_chore.id),
+          get api_v1_team_chore_path(other_team.id, other_chore.id),
               headers: auth_headers
 
           expect(response.body).to eq(' ')
@@ -398,7 +404,10 @@ describe 'Chores' do
       security [bearer_auth: []]
       consumes 'application/json'
       produces 'application/json'
-      parameter name: :id, in: :path, schema: { type: :integer, default: 12 }
+      parameter name: :team_id, in: :path,
+                schema: { type: :integer, default: 12 }
+      parameter name: :id, in: :path,
+                schema: { type: :integer, default: 12 }
       parameter name: :chore_data, in: :body, schema: {
         type: :object,
         properties: {
@@ -466,6 +475,7 @@ describe 'Chores' do
           Devise::JWT::TestHelpers.auth_headers({},
                                                 manager)['Authorization']
         end
+        let(:team_id) { team.id }
         let(:id) { chore.id }
         let(:chore_data) do
           { chore: attributes_for(:chore,
@@ -474,7 +484,7 @@ describe 'Chores' do
         end
 
         it 'returns a chore for a correct user' do
-          patch api_v1_chore_path(chore.id),
+          patch api_v1_team_chore_path(team.id, chore.id),
                 params: chore_data,
                 headers: auth_headers
 
@@ -508,13 +518,14 @@ describe 'Chores' do
           Devise::JWT::TestHelpers.auth_headers({},
                                                 manager)['Authorization']
         end
+        let(:team_id) { other_team.id }
         let(:id) { other_chore.id }
         let(:chore_data) do
           { chore: attributes_for(:chore, manager_ids: [manager.id]) }
         end
 
         it 'returns a chore for a correct user' do
-          patch api_v1_chore_path(other_chore.id),
+          patch api_v1_team_chore_path(other_team.id, other_chore.id),
                 params: chore_data,
                 headers: auth_headers
 
@@ -562,6 +573,7 @@ describe 'Chores' do
           Devise::JWT::TestHelpers.auth_headers({},
                                                 manager)['Authorization']
         end
+        let(:team_id) { team.id }
         let(:id) { chore.id }
         let(:chore_data) do
           { chore: attributes_for(:chore, name: '',
@@ -570,7 +582,7 @@ describe 'Chores' do
         end
 
         it 'returns a chore for a correct user' do
-          patch api_v1_chore_path(chore.id),
+          patch api_v1_team_chore_path(chore.id),
                 params: chore_data,
                 headers: auth_headers
 
@@ -588,6 +600,8 @@ describe 'Chores' do
     delete 'Delete a chore' do
       tags 'Chores'
       security [bearer_auth: []]
+      parameter name: :team_id, in: :path,
+                schema: { type: :integer, default: 12 }
       parameter name: :id, in: :path,
                 schema: { type: :integer, default: 12 }
 
@@ -596,11 +610,12 @@ describe 'Chores' do
           Devise::JWT::TestHelpers.auth_headers({},
                                                 manager)['Authorization']
         end
+        let(:team_id) { team.id }
         let(:id) { chore.id }
 
         it 'deletes a chore for a correct user' do
           expect do
-            delete api_v1_chore_path(second_chore.id),
+            delete api_v1_team_chore_path(team.id, second_chore.id),
                    headers: auth_headers
           end.to change { Chore.count }.from(2).to(1)
         end
@@ -613,11 +628,12 @@ describe 'Chores' do
           Devise::JWT::TestHelpers.auth_headers({},
                                                 manager)['Authorization']
         end
+        let(:team_id) { other_team.id }
         let(:id) { other_chore.id }
 
         it "doesn't delete a chore for an incorrect user" do
           expect do
-            delete api_v1_chore_path(other_chore.id),
+            delete api_v1_team_chore_path(other_team.id, other_chore.id),
                    headers: auth_headers
           end.not_to(change { Chore.count })
         end

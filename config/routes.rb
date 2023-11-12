@@ -3,8 +3,10 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      resources :chores
-      resources :teams
+      resources :teams do
+        resources :chores, except: :index
+      end
+      resources :chores, only: :index
       get '/managers', to: 'team_members#managers_list'
       get '/users', to: 'team_members#users_list'
     end

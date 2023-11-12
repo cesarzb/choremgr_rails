@@ -90,12 +90,11 @@ module Api
         @chore = Chore.new(chore_params)
         @chore.executor_id = params.dig(:chore, :executor_id)
         @chore.manager_id = current_user.id
-        @chore.team_id = params.dig(:chore, :team_id)
+        @chore.team_id = params[:team_id]
       end
 
       def team_manager?
-        unless current_user.teams.include?(Team.find(params.dig(:chore,
-                                                                :team_id)))
+        unless current_user.managed_teams.include?(Team.find(params[:team_id]))
           render json:
           { error: 'You are not authorized to perform this action' },
                  status: :forbidden
@@ -107,8 +106,7 @@ module Api
       end
 
       def team_member?
-        team = Team.find(params.dig(:chore,
-                                    :team_id))
+        team = Team.find(params[:team_id])
         unless team.executors.include?(User.find(params.dig(:chore,
                                                             :executor_id)))
           render json: { error: "You are not authorized to perform this \
