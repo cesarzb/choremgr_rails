@@ -4,14 +4,20 @@ info:
   title: API V1
   version: v1
 paths:
-  "/api/v1/chores":
+  "/api/v1/teams/{team_id}/chores":
     post:
       summary: Create a chore
       tags:
       - Chores
       security:
       - bearer_auth: []
-      parameters: []
+      parameters:
+      - name: team_id
+        in: path
+        schema:
+          type: integer
+          default: 12
+        required: true
       responses:
         '201':
           description: correct request
@@ -119,9 +125,6 @@ paths:
                     description:
                       type: string
                       default: Description
-                    team_id:
-                      type: integer
-                      default: 12
                     executor_id:
                       type: integer
                       default: 3
@@ -129,7 +132,7 @@ paths:
                   - name
                   - description
                   - executor_id
-                  - team_id
+  "/api/v1/chores":
     get:
       summary: Return a list of chores
       tags:
@@ -181,7 +184,7 @@ paths:
                       type: datetime
                     updated_at:
                       type: datetime
-  "/api/v1/chores/{id}":
+  "/api/v1/teams/{team_id}/chores/{id}":
     get:
       summary: Return a chore
       tags:
@@ -189,6 +192,12 @@ paths:
       security:
       - bearer_auth: []
       parameters:
+      - name: team_id
+        in: path
+        schema:
+          type: integer
+          default: 12
+        required: true
       - name: id
         in: path
         schema:
@@ -263,6 +272,12 @@ paths:
       security:
       - bearer_auth: []
       parameters:
+      - name: team_id
+        in: path
+        schema:
+          type: integer
+          default: 12
+        required: true
       - name: id
         in: path
         schema:
@@ -394,6 +409,12 @@ paths:
       security:
       - bearer_auth: []
       parameters:
+      - name: team_id
+        in: path
+        schema:
+          type: integer
+          default: 12
+        required: true
       - name: id
         in: path
         schema:
