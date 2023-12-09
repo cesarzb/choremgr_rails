@@ -22,7 +22,7 @@ module Api
       end
 
       def index
-        @chore_executions = @chore.chore_executions
+        @chore_executions = @chore.chore_executions.order(created_at: :desc)
 
         render json: @chore_executions, status: :ok
       end

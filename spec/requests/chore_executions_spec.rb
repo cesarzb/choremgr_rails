@@ -176,23 +176,23 @@ describe 'Chore executions' do
         it 'returns list of chore executions for chore executor' do
           get api_v1_team_chore_chore_executions_path(team_id, chore_id),
               headers: executor_auth_headers
-          expect(response.body).to eq([chore_execution,
-                                       second_chore_execution].to_json)
+          expect(response.body).to eq([second_chore_execution,
+                                       chore_execution].to_json)
         end
 
         it 'returns list of chore executions for chore manager' do
           get api_v1_team_chore_chore_executions_path(team_id, chore_id),
               headers: manager_auth_headers
-          expect(response.body).to eq([chore_execution,
-                                       second_chore_execution].to_json)
+          expect(response.body).to eq([second_chore_execution,
+                                       chore_execution].to_json)
         end
         it 'returns list of chore executions for team manager' do
           second_manager_auth_headers = Devise::JWT::TestHelpers
                                         .auth_headers({}, second_manager)
           get api_v1_team_chore_chore_executions_path(team_id, chore_id),
               headers: second_manager_auth_headers
-          expect(response.body).to eq([chore_execution,
-                                       second_chore_execution].to_json)
+          expect(response.body).to eq([second_chore_execution,
+                                       chore_execution].to_json)
         end
       end
 

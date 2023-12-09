@@ -3,29 +3,42 @@
 User.destroy_all
 
 executors = []
+executors << User.create!(
+  email: "bernard@executor.com",
+  password: 'Password1@',
+  password_confirmation: 'Password1@',
+  role: 0
+)
 
-25.times do |i|
+24.times do |i|
+  system('clear') || system('cls')
+  puts "Creating executors: #{i + 2}/25"
   executors << User.create!(
     email: Faker::Internet.email,
     password: 'Password1@',
     password_confirmation: 'Password1@',
     role: 0
   )
-  system('clear') || system('cls')
-  puts "Creating executors: #{i + 1}/25"
 end
 
 managers = []
 
-5.times do |i|
+managers << User.create!(
+  email: "bernard@manager.com",
+  password: 'Password1@',
+  password_confirmation: 'Password1@',
+  role: 1
+)
+
+4.times do |i|
+  system('clear') || system('cls')
+  puts "Creating managers: #{i + 2}/5"
   managers << User.create!(
     email: Faker::Internet.email,
     password: 'Password1@',
     password_confirmation: 'Password1@',
     role: 1
   )
-  system('clear') || system('cls')
-  puts "Creating managers: #{i + 1}/5"
 end
 
 teams = []
