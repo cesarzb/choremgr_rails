@@ -4,9 +4,12 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :teams do
-        resources :chores, except: :index
+        resources :chores, except: :index do
+          resources :chore_executions, only: [:create, :destroy, :index]
+        end
       end
       resources :chores, only: :index
+      resources :chore_executions, only: :index
       get '/managers', to: 'team_members#managers_list'
       get '/users', to: 'team_members#users_list'
     end

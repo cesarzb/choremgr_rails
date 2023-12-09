@@ -2,9 +2,8 @@
 
 module Api
   module V1
-    # rubocop:todo Style/Documentation
+    # Controller for returning lists of team members
     class TeamMembersController < ApplicationController
-      # rubocop:enable Style/Documentation
       before_action :authenticate_user!
 
       def managers_list

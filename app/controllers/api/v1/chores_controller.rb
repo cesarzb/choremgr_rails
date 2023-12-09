@@ -2,9 +2,8 @@
 
 module Api
   module V1
-    # rubocop:todo Style/Documentation
+    # Controller class for chores
     class ChoresController < ApplicationController
-      # rubocop:enable Style/Documentation
       before_action :authenticate_user!
       before_action :set_chore, only: %i[show update destroy]
       before_action :manager?, only: %i[create update destroy]
@@ -75,14 +74,14 @@ module Api
       def manager?
         return if current_user.manager?
 
-        render json: { error: 'You are not authorized to perform this action' },
+        render json: { error: 'You are not a manager!' },
                status: :forbidden
       end
 
       def chore_manager?
         return if @chore.manager_id == current_user.id
 
-        render json: { error: 'You are not authorized to perform this action' },
+        render json: { error: 'You are not the manager of this chore!' },
                status: :forbidden
       end
 
@@ -96,12 +95,12 @@ module Api
       def team_manager?
         unless current_user.managed_teams.include?(Team.find(params[:team_id]))
           render json:
-          { error: 'You are not authorized to perform this action' },
+          { error: 'You are not a manager of this team!' },
                  status: :forbidden
 
         end
       rescue ActiveRecord::RecordNotFound
-        render json: { error: 'You are not authorized to perform this action' },
+        render json: { error: 'You are not a manager of this team!' },
                status: :forbidden
       end
 
@@ -109,11 +108,11 @@ module Api
         team = Team.find(params[:team_id])
         unless team.executors.include?(User.find(params.dig(:chore,
                                                             :executor_id)))
-          render json: { error: "You are not authorized to perform this \
-action" }, status: :forbidden
+          render json: { error: 'You are not a member of this team!' },
+                 status: :forbidden
         end
       rescue ActiveRecord::RecordNotFound
-        render json: { error: 'You are not authorized to perform this action' },
+        render json: { error: 'You are not a member of this team!' },
                status: :forbidden
       end
 
