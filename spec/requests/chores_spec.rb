@@ -274,7 +274,7 @@ describe 'Chores' do
           expect(response.body).to eq([chore, second_chore].to_json)
         end
 
-        it 'returns a list of chores for a user' do
+        it 'returns a list of chores for a specified team' do
           get api_v1_chores_path,
               params: { team_ids: [team.id] },
               headers: auth_headers
@@ -524,13 +524,13 @@ describe 'Chores' do
           { chore: attributes_for(:chore, manager_ids: [manager.id]) }
         end
 
-        it 'returns a chore for a correct user' do
+        it 'fails for an incorrect user' do
           patch api_v1_team_chore_path(other_team.id, other_chore.id),
                 params: chore_data,
                 headers: auth_headers
 
           expect(response.body).to eq(
-            '{"error":"You are not authorized to perform this action"}'
+            '{"error":"You are not the manager of this chore!"}'
           )
         end
 
@@ -596,7 +596,7 @@ describe 'Chores' do
       end
     end
 
-    # DESTROY
+    # DELETE
     delete 'Delete a chore' do
       tags 'Chores'
       security [bearer_auth: []]

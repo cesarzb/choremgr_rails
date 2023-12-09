@@ -343,13 +343,13 @@ describe 'Teams' do
           { team: attributes_for(:team, manager_ids: [manager.id]) }
         end
 
-        it 'returns a team for a correct user' do
+        it 'fails for an incorrect user' do
           patch api_v1_team_path(other_team.id),
                 params: team_data,
                 headers: auth_headers
 
           expect(response.body).to eq(
-            '{"error":"You are not authorized to perform this action"}'
+            '{"error":"You are not a manager of this team!"}'
           )
         end
 
@@ -400,7 +400,7 @@ describe 'Teams' do
         run_test!
       end
 
-      # DESTROY
+      # DELETE
       delete 'Delete a team' do
         tags 'Teams'
         security [bearer_auth: []]

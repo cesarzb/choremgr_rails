@@ -48,14 +48,24 @@ teams = []
   puts "Creating teams: #{i + 1}/5"
 end
 
-executors.each do |executor|
-  3.times do
-    Chore.create!(
+executors.each_with_index do |executor, index|
+  3.times do |i|
+    chore = Chore.create!(
       name: Faker::FunnyName.name,
       description: Faker::JapaneseMedia::StudioGhibli.quote,
       executor_id: executor.id,
       team_id: executor.teams.first.id,
       manager_id: executor.teams.first.managers.first.id
     )
+
+    today = DateTime.now
+    3.times do |num|
+      ChoreExecution.create!(
+        date: today.days_ago(num),
+        chore: chore
+      )
+      system('clear') || system('cls')
+      puts "For executor #{index + 1}/#{executors.size}\nCreating chores: #{i + 1}/3\nWith chore executions: #{num + 1}/3"
+    end
   end
 end

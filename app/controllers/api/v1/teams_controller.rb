@@ -2,9 +2,8 @@
 
 module Api
   module V1
-    # rubocop:todo Style/Documentation
+    # Controller for managing teams
     class TeamsController < ApplicationController
-      # rubocop:enable Style/Documentation
       before_action :authenticate_user!
       before_action :set_team, only: %i[show update destroy]
       before_action :manager?, only: %i[create update destroy]
@@ -71,14 +70,14 @@ module Api
       def manager?
         return if current_user.manager?
 
-        render json: { error: 'You are not authorized to perform this action' },
+        render json: { error: 'You are not a manager!' },
                status: :forbidden
       end
 
       def team_manager?
         return if @team.managers.include?(current_user)
 
-        render json: { error: 'You are not authorized to perform this action' },
+        render json: { error: 'You are not a manager of this team!' },
                status: :forbidden
       end
 
