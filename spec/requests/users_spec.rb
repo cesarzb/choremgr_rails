@@ -2,12 +2,14 @@
 
 require 'rails_helper'
 require 'swagger_helper'
+require 'devise/jwt/test_helpers'
 
 describe 'Users' do
   path '/users' do
     post 'Create a user' do
       tags 'Users'
       consumes 'application/json'
+      produces 'application/json'
       parameter name: :signup_data, in: :body, schema: {
         type: :object,
         properties: {
@@ -28,15 +30,22 @@ describe 'Users' do
         let(:signup_data) { { user: attributes_for(:user) } }
         schema type: :object,
                properties: {
-                 message: { type: :string }
+                 message: { type: :string },
+                 role: { type: :string }
                }
         header 'Authorization', schema: { type: :string, nullable: false },
                                 description: 'JWT token that is required to
                                 proceed to other pages authorized,
                           it looks like this: "Authorization: Bearer
                           generated.jwt.token"'
-        example 'application/json', :user, {
-          "message": 'Registered.'
+        example 'application/json', :executor, {
+          "message": 'Registered.',
+          "role": 'executor'
+        }
+
+        example 'application/json', :manager, {
+          "message": 'Registered.',
+          "role": 'manager'
         }
 
         it 'creates new user for valid parameters' do
@@ -94,6 +103,7 @@ describe 'Users' do
     post 'Log in a user' do
       tags 'Users'
       consumes 'application/json'
+      produces 'application/json'
       parameter name: :signin_data, in: :body, schema: {
         type: :object,
         properties: {
@@ -115,13 +125,24 @@ describe 'Users' do
         end
         schema type: :object,
                properties: {
-                 message: { type: :string }
+                 message: { type: :string },
+                 role: { type: :string }
                }
         header 'Authorization', schema: { type: :string, nullable: false },
                                 description: 'JWT token that is required to
                                 proceed to other pages authorized,
                           it looks like this: "Authorization: Bearer
                           generated.jwt.token"'
+        example 'application/json', :executor, {
+          "message": 'Registered.',
+          "role": 'executor'
+        }
+
+        example 'application/json', :manager, {
+          "message": 'Registered.',
+          "role": 'manager'
+        }
+
         run_test!
       end
 
@@ -130,6 +151,58 @@ describe 'Users' do
           { user: { email: exe_user.email,
                     password: "#{exe_user.password} wrong" } }
         end
+
+        schema type: :object,
+               properties: {
+                 error: { type: :string }
+               }
+        example 'application/json', :incorrect_log_in,
+                {
+                  "error": 'Invalid Email or password.'
+                }
+
+        run_test!
+      end
+    end
+  end
+
+  path '/users/sign_out' do
+    let!(:executor) { create(:user, role: 1) }
+    let(:executor_auth_headers) do
+      Devise::JWT::TestHelpers.auth_headers({},
+                                            executor)
+    end
+
+    delete 'Log out a user' do
+      tags 'Users'
+      security [bearer_auth: []]
+      produces 'application/json'
+
+      response '200', 'user logged in' do
+        let(:Authorization) do
+          executor_auth_headers['Authorization']
+        end
+        schema type: :object,
+               properties: {
+                 message: { type: :string }
+               }
+        example 'application/json', :log_out, {
+          "message": 'Logged out.'
+        }
+
+        run_test!
+      end
+
+      response '401', 'user unauthorized' do
+        let(:Authorization) { '' }
+        schema type: :object,
+               properties: {
+                 message: { type: :string }
+               }
+        example 'application/json', :log_out, {
+          "message": "Couldn't log out."
+        }
+
         run_test!
       end
     end

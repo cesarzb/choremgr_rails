@@ -944,9 +944,21 @@ paths:
           content:
             application/json:
               examples:
-                user:
+                executor:
                   value:
                     message: Registered.
+                    role: executor
+                manager:
+                  value:
+                    message: Registered.
+                    role: manager
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  role:
+                    type: string
         '422':
           description: invalid request
           content:
@@ -956,6 +968,15 @@ paths:
                   value:
                     email:
                     - can't be blank
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  errors:
+                    type: array
+                    properties:
+                      type: string
       requestBody:
         content:
           application/json:
@@ -1001,8 +1022,37 @@ paths:
                                                 proceed to other pages authorized,
                                           it looks like this: "Authorization: Bearer
                                           generated.jwt.token"
+          content:
+            application/json:
+              examples:
+                executor:
+                  value:
+                    message: Registered.
+                    role: executor
+                manager:
+                  value:
+                    message: Registered.
+                    role: manager
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  role:
+                    type: string
         '401':
           description: user unauthorized
+          content:
+            application/json:
+              examples:
+                incorrect_log_in:
+                  value:
+                    error: Invalid Email or password.
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
       requestBody:
         content:
           application/json:
@@ -1021,6 +1071,40 @@ paths:
                   required:
                   - email
                   - password
+  "/users/sign_out":
+    delete:
+      summary: Log out a user
+      tags:
+      - Users
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: user logged in
+          content:
+            application/json:
+              examples:
+                log_out:
+                  value:
+                    message: Logged out.
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: user unauthorized
+          content:
+            application/json:
+              examples:
+                log_out:
+                  value:
+                    message: Couldn't log out.
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
 servers:
 - url: http://{defaultHost}
   variables:

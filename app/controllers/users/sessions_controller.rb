@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 module Users
-  class SessionsController < Devise::SessionsController # rubocop:todo Style/Documentation
+  # controller responsible for handling user session logic
+  class SessionsController < Devise::SessionsController
     respond_to :json
 
     private
 
     def respond_with(_resource, _opts = {})
-      render json: { message: 'Logged in.' }, status: :ok
+      render json: { message: 'Logged in.', role: current_user.role },
+             status: :ok
     end
 
     def respond_to_on_destroy
