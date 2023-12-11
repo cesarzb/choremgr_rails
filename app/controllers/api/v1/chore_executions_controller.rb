@@ -14,7 +14,7 @@ module Api
         @chore_execution = ChoreExecution.new(chore: @chore,
                                               date: Time.now)
         if @chore_execution.save
-          render json: { message: 'Congratulations, chore executed!' },
+          render json: { chore_execution: @chore_execution },
                  status: :created
         else
           render json: @chore_execution.errors, status: :unprocessable_entity
@@ -22,7 +22,7 @@ module Api
       end
 
       def index
-        @chore_executions = @chore.chore_executions
+        @chore_executions = @chore.chore_executions.order(created_at: :desc)
 
         render json: @chore_executions, status: :ok
       end

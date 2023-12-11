@@ -30,21 +30,48 @@ paths:
           content:
             application/json:
               examples:
-                chore: {}
+                chore:
+                  value:
+                    id: 2
+                    date: '2023-11-09T17:43:13.791Z'
+                    created_at: '2023-11-09T17:43:13.791Z'
+                    updated_at: '2023-11-09T17:43:13.791Z'
               schema:
                 type: object
-                properties: {}
+                properties:
+                  chore_execution:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      date:
+                        type: datetime
+                      created_at:
+                        type: datetime
+                      updated_at:
+                        type: datetime
         '422':
           description: invalid request
           content:
             application/json:
               examples:
-                chore: {}
+                chore_execution: {}
               schema:
                 type: object
                 properties: {}
         '403':
           description: unauthorized request
+          content:
+            application/json:
+              examples:
+                other_users_chore:
+                  value:
+                    error: You are not the executor of this chore!
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
     get:
       summary: Index chore executions for a given task
       tags:
@@ -112,6 +139,17 @@ paths:
                     type: string
         '403':
           description: executor or team manager request
+          content:
+            application/json:
+              examples:
+                other_users_chore:
+                  value:
+                    error: You are not the executor of this chore!
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
   "/api/v1/teams/{team_id}/chores/{chore_id}/chore_executions/{id}":
     delete:
       summary: Delete a chore execution
@@ -143,8 +181,30 @@ paths:
           description: correct request
         '422':
           description: non existent chore
+          content:
+            application/json:
+              examples:
+                chore_non_existent:
+                  value:
+                    error: Chore doesn't exist!
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
         '403':
           description: unauthorized request
+          content:
+            application/json:
+              examples:
+                chore_non_existent:
+                  value:
+                    error: You are not the executor of this chore!
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
   "/api/v1/teams/{team_id}/chores":
     post:
       summary: Create a chore

@@ -53,8 +53,21 @@ describe 'Chore executions' do
                                                 executor)['Authorization']
         end
         schema type: :object,
-               properties: {}
-        example 'application/json', :chore, {}
+               properties: {
+                 chore_execution: { type: :object,
+                                    properties: {
+                                      id: { type: :integer },
+                                      date: { type: :datetime },
+                                      created_at: { type: :datetime },
+                                      updated_at: { type: :datetime }
+                                    } }
+               }
+        example 'application/json', :chore, {
+          "id": 2,
+          "date": '2023-11-09T17:43:13.791Z',
+          "created_at": '2023-11-09T17:43:13.791Z',
+          "updated_at": '2023-11-09T17:43:13.791Z'
+        }
 
         run_test!
         it 'works for chore executor' do
@@ -76,7 +89,7 @@ describe 'Chore executions' do
         schema type: :object,
                properties: {}
 
-        example 'application/json', :chore,
+        example 'application/json', :chore_execution,
                 {}
 
         run_test!
@@ -99,6 +112,14 @@ describe 'Chore executions' do
           Devise::JWT::TestHelpers.auth_headers({},
                                                 manager)['Authorization']
         end
+        schema type: :object,
+               properties: {
+                 error: { type: :string }
+               }
+
+        example 'application/json', :other_users_chore, {
+          error: 'You are not the executor of this chore!'
+        }
 
         run_test!
         it 'fails for manager' do
@@ -176,23 +197,23 @@ describe 'Chore executions' do
         it 'returns list of chore executions for chore executor' do
           get api_v1_team_chore_chore_executions_path(team_id, chore_id),
               headers: executor_auth_headers
-          expect(response.body).to eq([chore_execution,
-                                       second_chore_execution].to_json)
+          expect(response.body).to eq([second_chore_execution,
+                                       chore_execution].to_json)
         end
 
         it 'returns list of chore executions for chore manager' do
           get api_v1_team_chore_chore_executions_path(team_id, chore_id),
               headers: manager_auth_headers
-          expect(response.body).to eq([chore_execution,
-                                       second_chore_execution].to_json)
+          expect(response.body).to eq([second_chore_execution,
+                                       chore_execution].to_json)
         end
         it 'returns list of chore executions for team manager' do
           second_manager_auth_headers = Devise::JWT::TestHelpers
                                         .auth_headers({}, second_manager)
           get api_v1_team_chore_chore_executions_path(team_id, chore_id),
               headers: second_manager_auth_headers
-          expect(response.body).to eq([chore_execution,
-                                       second_chore_execution].to_json)
+          expect(response.body).to eq([second_chore_execution,
+                                       chore_execution].to_json)
         end
       end
 
@@ -228,6 +249,16 @@ describe 'Chore executions' do
           Devise::JWT::TestHelpers.auth_headers({},
                                                 other_executor)['Authorization']
         end
+
+        schema type: :object,
+               properties: {
+                 error: { type: :string }
+               }
+
+        example 'application/json', :other_users_chore, {
+          error: 'You are not the executor of this chore!'
+        }
+
         run_test!
         it 'returns an error for a different executor' do
           get api_v1_team_chore_chore_executions_path(team_id, chore_id),
@@ -302,6 +333,14 @@ describe 'Chore executions' do
           Devise::JWT::TestHelpers.auth_headers({},
                                                 executor)['Authorization']
         end
+        schema type: :object,
+               properties: {
+                 error: { type: :string }
+               }
+
+        example 'application/json', :chore_non_existent, {
+          error: "Chore doesn't exist!"
+        }
 
         run_test!
         it "doesn't work for non existent chore" do
@@ -332,6 +371,14 @@ describe 'Chore executions' do
           Devise::JWT::TestHelpers.auth_headers({},
                                                 other_executor)['Authorization']
         end
+        schema type: :object,
+               properties: {
+                 error: { type: :string }
+               }
+
+        example 'application/json', :chore_non_existent, {
+          error: 'You are not the executor of this chore!'
+        }
 
         run_test!
         it 'fails for manager' do
