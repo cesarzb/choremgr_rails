@@ -14,7 +14,7 @@ module Api
         @chore_execution = ChoreExecution.new(chore: @chore,
                                               date: Time.now)
         if @chore_execution.save
-          render json: { message: 'Congratulations, chore executed!' },
+          render json: { chore_execution: @chore_execution },
                  status: :created
         else
           render json: @chore_execution.errors, status: :unprocessable_entity
