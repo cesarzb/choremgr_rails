@@ -8,7 +8,11 @@ module Users
     private
 
     def respond_with(_resource, _opts = {})
-      render json: { message: 'Logged in.', role: current_user.role },
+      render json: {
+               message: 'Logged in.',
+               role: current_user.role,
+               id: current_user.id
+             },
              status: :ok
     end
 
