@@ -948,6 +948,7 @@ paths:
                   value:
                     message: Registered.
                     role: executor
+                    id: 1
                 manager:
                   value:
                     message: Registered.
@@ -959,6 +960,8 @@ paths:
                     type: string
                   role:
                     type: string
+                  id:
+                    type: integer
         '422':
           description: invalid request
           content:
@@ -1029,6 +1032,7 @@ paths:
                   value:
                     message: Registered.
                     role: executor
+                    id: 1
                 manager:
                   value:
                     message: Registered.
@@ -1040,6 +1044,8 @@ paths:
                     type: string
                   role:
                     type: string
+                  id:
+                    type: integer
         '401':
           description: user unauthorized
           content:

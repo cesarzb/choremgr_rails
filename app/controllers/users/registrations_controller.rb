@@ -20,7 +20,11 @@ module Users
     end
 
     def register_success
-      render json: { message: 'Registered.', role: current_user.role }
+      render json: {
+        message: 'Registered.',
+        role: current_user.role,
+        id: current_user.id
+      }
     end
 
     def register_failed(resource)

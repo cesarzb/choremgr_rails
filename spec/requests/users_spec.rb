@@ -31,7 +31,8 @@ describe 'Users' do
         schema type: :object,
                properties: {
                  message: { type: :string },
-                 role: { type: :string }
+                 role: { type: :string },
+                 id: { type: :integer }
                }
         header 'Authorization', schema: { type: :string, nullable: false },
                                 description: 'JWT token that is required to
@@ -39,13 +40,14 @@ describe 'Users' do
                           it looks like this: "Authorization: Bearer
                           generated.jwt.token"'
         example 'application/json', :executor, {
-          "message": 'Registered.',
-          "role": 'executor'
+          'message': 'Registered.',
+          'role': 'executor',
+          'id': 1
         }
 
         example 'application/json', :manager, {
-          "message": 'Registered.',
-          "role": 'manager'
+          'message': 'Registered.',
+          'role': 'manager'
         }
 
         it 'creates new user for valid parameters' do
@@ -75,7 +77,7 @@ describe 'Users' do
 
         example 'application/json', :user,
                 {
-                  "email": [
+                  'email': [
                     "can't be blank"
                   ]
                 }
@@ -126,7 +128,8 @@ describe 'Users' do
         schema type: :object,
                properties: {
                  message: { type: :string },
-                 role: { type: :string }
+                 role: { type: :string },
+                 id: { type: :integer }
                }
         header 'Authorization', schema: { type: :string, nullable: false },
                                 description: 'JWT token that is required to
@@ -134,13 +137,14 @@ describe 'Users' do
                           it looks like this: "Authorization: Bearer
                           generated.jwt.token"'
         example 'application/json', :executor, {
-          "message": 'Registered.',
-          "role": 'executor'
+          'message': 'Registered.',
+          'role': 'executor',
+          'id': 1
         }
 
         example 'application/json', :manager, {
-          "message": 'Registered.',
-          "role": 'manager'
+          'message': 'Registered.',
+          'role': 'manager'
         }
 
         run_test!
@@ -158,7 +162,7 @@ describe 'Users' do
                }
         example 'application/json', :incorrect_log_in,
                 {
-                  "error": 'Invalid Email or password.'
+                  'error': 'Invalid Email or password.'
                 }
 
         run_test!
@@ -187,7 +191,7 @@ describe 'Users' do
                  message: { type: :string }
                }
         example 'application/json', :log_out, {
-          "message": 'Logged out.'
+          'message': 'Logged out.'
         }
 
         run_test!
@@ -200,7 +204,7 @@ describe 'Users' do
                  message: { type: :string }
                }
         example 'application/json', :log_out, {
-          "message": "Couldn't log out."
+          'message': "Couldn't log out."
         }
 
         run_test!
