@@ -11,7 +11,7 @@ class Chore < ApplicationRecord
   belongs_to :manager, class_name: 'User', foreign_key: :manager_id
   belongs_to :executor, class_name: 'User', foreign_key: :executor_id
   belongs_to :team
-  has_many :chore_executions
+  has_many :chore_executions, dependent: :destroy
 
   validates :name, presence: true, length: { minimum: 2, maximum: 24 }
   validates :description, length: { minimum: 3 }
