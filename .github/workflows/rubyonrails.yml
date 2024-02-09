@@ -18,6 +18,7 @@ jobs:
           - 5432:5432
     env:
       RAILS_ENV: test
+      RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
       DATABASE_URL: "postgresql://postgres@localhost/pipeline_learning_test"
     steps:
       - name: Checkout code
