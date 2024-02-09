@@ -26,6 +26,8 @@ jobs:
         uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
         with:
           bundler-cache: true
+      - name: Build Rails container
+        run: docker build . -t choremgr_ruby
       - name: Wait for PostgreSQL to be ready
         run: docker-compose build
       - name: Run docker compose
