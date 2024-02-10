@@ -9,7 +9,7 @@ gem 'bootsnap', require: false
 gem 'devise'
 gem 'devise-jwt'
 gem 'pg', '~> 1.1'
-gem 'puma', '~> 5.0'
+gem 'puma'
 gem 'rack-cors'
 gem 'rails', '~> 7.0.6'
 gem 'rubocop', require: false
@@ -24,6 +24,7 @@ group :development, :test do
   gem 'pry-remote'
   gem 'rspec-rails', '~> 6.0.0'
   gem 'rswag'
+  gem 'rubocop-rspec'
 end
 
 group :development do
