@@ -25,6 +25,12 @@ jobs:
           bundler-cache: true
       - name: Build Rails container
         run: docker build . -t choremgr_ruby
+      - name: Create database
+        run: docker-compose run --rm web rails db:drop && rails db:create && rails db:migrate
+        env:
+          RAILS_ENV: test
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          DATABASE_URL: "postgresql://postgres@localhost/choremgr_rails"
       - name: Run tests
         run: docker-compose run --rm web rspec
         env:
