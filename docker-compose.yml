@@ -19,5 +19,6 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USERNAME=postgres
       - POSTGRES_HOST=database
+      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
 volumes:
   db_data:
