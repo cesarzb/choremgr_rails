@@ -24,8 +24,6 @@ group :development, :test do
   gem 'pry-remote'
   gem 'rspec-rails', '~> 6.0.0'
   gem 'rswag'
-  gem 'rubocop-rspec'
-  gem 'rubocop-discourse'
 end
 
 group :development do
