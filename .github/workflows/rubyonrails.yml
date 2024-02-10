@@ -26,6 +26,6 @@ jobs:
       - name: Build Rails container
         run: docker build . -t choremgr_ruby
       - name: Run tests
-        run: docker-compose run --rm -e RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} web rspec
+        run: docker-compose run --rm -e RAILS_ENV=test -e RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} web rspec
       - name: Check code style with RuboCop
-        run: docker-compose run --rm -e RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} web rubocop
+        run: docker-compose run --rm -e RAILS_ENV=test -e RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} web rubocop
