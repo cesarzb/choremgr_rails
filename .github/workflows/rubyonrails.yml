@@ -25,17 +25,7 @@ jobs:
           bundler-cache: true
       - name: Build Rails container
         run: docker build . -t choremgr_ruby
-      - name: Wait for PostgreSQL to be ready
-        run: docker-compose build
-      - name: Run docker compose
-        run: docker-compose up -d
-        env:
-          RAILS_ENV: test
-          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          DATABASE_URL: "postgresql://postgres@localhost/choremgr_rails"
-      - name: Create PostgreSQL database
-        run: docker-compose run web rails db:create
       - name: Run tests
-        run: docker-compose run --rm web rspec
+        run: docker-compose run --rm -e RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} web rspec
       - name: Check code style with RuboCop
-        run: docker-compose run --rm web rubocop
+        run: docker-compose run --rm -e RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }} web rubocop
