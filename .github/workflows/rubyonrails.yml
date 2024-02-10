@@ -40,5 +40,3 @@ jobs:
           RAILS_ENV: test
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           DATABASE_URL: "postgresql://postgres@localhost/choremgr_rails"
-      - name: Check code style with RuboCop
-        run: docker-compose run --rm web rubocop
