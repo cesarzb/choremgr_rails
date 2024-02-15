@@ -12,6 +12,7 @@ gem 'pg', '~> 1.1'
 gem 'puma'
 gem 'rack-cors'
 gem 'rails', '~> 7.0.6'
+gem 'rswag'
 gem 'rubocop', require: false
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
@@ -23,8 +24,9 @@ group :development, :test do
   gem 'pry-nav'
   gem 'pry-remote'
   gem 'rspec-rails', '~> 6.0.0'
-  gem 'rswag'
 end
 
 group :development do
 end
+
+gem "dockerfile-rails", ">= 1.6", :group => :development
