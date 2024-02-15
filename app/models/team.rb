@@ -14,6 +14,10 @@ class Team < ApplicationRecord # rubocop:todo Style/Documentation
   validates :description, length: { minimum: 3 }
   validate :manager_present
 
+  def members
+    managers + executors
+  end
+
   private
 
   def manager_present

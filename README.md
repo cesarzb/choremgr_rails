@@ -1,24 +1,31 @@
-# README
+This is a Ruby on Rails app that allows managers to create teams
+and chores, to improve their work efficiency with their executors.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+App is devise-jwt, to introduce stateless
+and safe standard of user authentication.
 
-Things you may want to cover:
+Database is PostgreSQL.
 
-* Ruby version
+For documentation and tests app uses gems rswag and rspec-rails,
+which automatically creates documentation and tests
+at the same time.
 
-* System dependencies
+There is also a gem rubocop, which helps in keeping code style
+clean and readable.
 
-* Configuration
+The app has a docker-compose file, that allows it to run on any machine
+(it requires passing rails master key, which is secret),
+to make development easier and faster.
 
-* Database creation
+For CI a github actions workflow is used. It checks if rspec tests
+are passing before merging PR to the main branch, to make sure
+that there is no unnoticed bugs in the code getting merged.
 
-* Database initialization
+App uses seeds, to populate database for demonstration purposes,
+to access some example user, you can use following credentials:
 
-* How to run the test suite
+bernard@executor.com
+Password1@
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+bernard@manager.com
+Password1@

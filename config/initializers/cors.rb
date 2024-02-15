@@ -9,7 +9,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins Rails.env.production? ? ENV['FRONT_URL'] : "localhost:5173"
+    origins Rails.env.production? ? ENV['FRONT_URL']&.split(',') : "localhost:5173"
 
     resource '*',
              headers: :any,

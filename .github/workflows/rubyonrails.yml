@@ -1,9 +1,9 @@
 name: "Ruby on Rails CI"
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -24,7 +24,7 @@ jobs:
         with:
           bundler-cache: true
       - name: Build Rails container
-        run: docker build . -t choremgr_ruby
+        run: docker build -f .github/workflows/Dockerfile . -t choremgr_ruby
       - name: Create database and migrate
         run: |
           docker-compose run --rm web rails db:drop &&
