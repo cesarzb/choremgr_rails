@@ -45,7 +45,7 @@ teams = []
 
 5.times do |i|
   team = Team.new(
-    name: Faker::FunnyName.name,
+    name: Faker::FunnyName.name[0..23],
     description: Faker::JapaneseMedia::StudioGhibli.quote
   )
 
@@ -64,7 +64,7 @@ end
 executors.each_with_index do |executor, index|
   3.times do |i|
     chore = Chore.create!(
-      name: Faker::FunnyName.name,
+      name: Faker::FunnyName.name[0..23],
       description: Faker::JapaneseMedia::StudioGhibli.quote,
       executor_id: executor.id,
       team_id: executor.teams.first.id,

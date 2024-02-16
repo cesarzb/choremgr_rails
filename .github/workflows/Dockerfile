@@ -6,7 +6,8 @@ RUN apt-get update && \
   postgresql-client \
   libpq-dev \
   nodejs \
-  yarn
+  yarn \
+  vim
 
 WORKDIR /app
 
