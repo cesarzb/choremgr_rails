@@ -9,6 +9,7 @@ module Api
       before_action :manager?, only: %i[create update destroy]
       before_action :team_manager?, only: %i[update destroy]
       before_action :build_team_with_params, only: :create
+      after_action { pagy_headers_merge(@pagy) if @pagy }
 
       def create
         build_team_with_params
@@ -22,6 +23,7 @@ module Api
 
       def index
         @teams = current_user.teams
+        # @pagy, @records = pagy(@teams)
         render json: @teams
       end
 

@@ -11,6 +11,7 @@ module Api
       before_action :team_member?, only: :create
       before_action :chore_manager?, only: %i[update destroy]
       before_action :build_chore_with_params, only: :create
+      after_action { pagy_headers_merge(@pagy) if @pagy }
 
       def create
         build_chore_with_params
@@ -25,6 +26,7 @@ module Api
 
       def index
         @chores = Chore.for_user(current_user).for_teams(params[:team_ids])
+        @pagy, @chores = pagy(@chores)
 
         render json: @chores
       end

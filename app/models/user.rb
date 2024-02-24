@@ -28,6 +28,15 @@ class User < ApplicationRecord # rubocop:todo Style/Documentation
     (managed_teams.all + executed_teams.all).uniq
   end
 
+  def teams_with_managers_or_executors
+      Team.joins('INNER JOIN user_team_managed ON user_team_managed.team_id = teams.id')
+        .joins('INNER JOIN users AS managers ON managers.id = user_team_managed.user_id')
+        .joins('INNER JOIN user_team_executed ON user_team_executed.team_id = teams.id')
+        .joins('INNER JOIN users AS executors ON executors.id = user_team_executed.user_id')
+        .where('managers.id = ? OR executors.id = ?', id, id)
+        .distinct
+  end
+
   private
 
   def strong_password
