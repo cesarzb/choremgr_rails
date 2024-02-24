@@ -9,6 +9,7 @@ gem 'bootsnap', require: false
 gem 'devise'
 gem 'devise-jwt'
 gem 'faker'
+gem 'pagy'
 gem 'pg', '~> 1.1'
 gem 'puma'
 gem 'rack-cors'
@@ -29,4 +30,4 @@ end
 group :development do
 end
 
-gem "dockerfile-rails", ">= 1.6", :group => :development
+gem 'dockerfile-rails', '>= 1.6', group: :development

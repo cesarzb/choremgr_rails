@@ -2,6 +2,9 @@
 
 include ActionController::MimeResponds # rubocop:todo Style/MixinUsage
 
-class ApplicationController < ActionController::API # rubocop:todo Style/Documentation
+# class for Application Controller, that all other components inherit from
+class ApplicationController < ActionController::API
+  include Pagy::Backend
+
   respond_to :json
 end
