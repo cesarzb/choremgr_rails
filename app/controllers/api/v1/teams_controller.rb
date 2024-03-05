@@ -22,8 +22,8 @@ module Api
       end
 
       def index
-        @teams = current_user.teams
-        # @pagy, @records = pagy(@teams)
+        @teams = current_user.teams_with_managers_or_executors
+        @pagy, @records = pagy(@teams)
         render json: @teams
       end
 

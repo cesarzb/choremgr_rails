@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-class User < ApplicationRecord # rubocop:todo Style/Documentation
+# this is a User model class
+# User objects are as the name suggests users of this app
+# they can be either managers or executors
+# they can execute tasks or manage team, or do both this things at once
+class User < ApplicationRecord
   has_and_belongs_to_many :managed_teams, class_name: 'Team',
                                           join_table: :user_team_managed
   has_and_belongs_to_many :executed_teams, class_name: 'Team',
@@ -29,12 +33,21 @@ class User < ApplicationRecord # rubocop:todo Style/Documentation
   end
 
   def teams_with_managers_or_executors
-      Team.joins('INNER JOIN user_team_managed ON user_team_managed.team_id = teams.id')
-        .joins('INNER JOIN users AS managers ON managers.id = user_team_managed.user_id')
-        .joins('INNER JOIN user_team_executed ON user_team_executed.team_id = teams.id')
-        .joins('INNER JOIN users AS executors ON executors.id = user_team_executed.user_id')
-        .where('managers.id = ? OR executors.id = ?', id, id)
-        .distinct
+    Team
+      .joins('LEFT JOIN user_team_managed ON user_team_managed.team_id =
+      teams.id')
+      .joins('LEFT JOIN user_team_executed ON user_team_executed.team_id =
+      teams.id')
+      .where('user_team_managed.user_id = ? OR user_team_executed.user_id = ?',
+             id, id)
+      .distinct
+
+    # SELECT DISTINCT teams.*
+    # FROM teams
+    # LEFT JOIN user_team_managed ON user_team_managed.team_id = teams.id
+    # LEFT JOIN user_team_executed ON user_team_executed.team_id = teams.id
+    # WHERE user_team_managed.user_id = :user_id OR user_team_executed.user_id
+    # = :user_id
   end
 
   private
